@@ -18,8 +18,8 @@ android {
         ndk{
             moduleName 'native'
 //            abiFilter 'armeabi','armeabi-v7a'
-            abiFilters 'armeabi-v7a'
-//            abiFilters "armeabi", "armeabi-v7a" , "arm64-v8a", "x86", "x86_64"
+//            abiFilters 'armeabi-v7a','x86_64'
+            abiFilters  "armeabi-v7a" , "arm64-v8a", "x86", "x86_64"
             //不加的话  .h文件打log 会报undefined reference to '__android_log_print'
             //build.gradle 的作用类似于mk文件，加ldLibs “log”的作用
 //            相当在在Android.mk 中
