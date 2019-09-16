@@ -1,7 +1,9 @@
 //
 // Created by WrBug on 2018/3/23.
 //
-#include "native.h"
+//#include "native.h"
+#include <android/log.h>
+#include <jni.h>
 
 #define DEBUG true
 
@@ -116,7 +118,12 @@ static int jniRegisterNativeMethods(JNIEnv* env, const char* className,
     (env)->DeleteLocalRef(clazz);
     return result;
 }
-
+/**
+ * jni最先调用的方法，动态注册一些方法
+ * @param vm
+ * @param reserved
+ * @return
+ */
 jint JNI_OnLoad(JavaVM* vm, void* reserved){
     JNIEnv* env = NULL;
     jint result = -1;

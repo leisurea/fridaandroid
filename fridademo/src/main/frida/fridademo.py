@@ -17,7 +17,7 @@ def run(pkg):
 def main(argv):
     if len(argv) != 2:
         print("must input two arg")
-        print("For exanple: python demo.py packName")
+        print("For example: python demo.py packName")
         # run("cn.kxgz.fridademo")
     else:
         run(argv[1])
