@@ -1,6 +1,7 @@
 setImmediate(function () {
     Java.perform(function () {
         console.log("好戏开场了");
+        var isMUMU = Process.arch == "ia32";//mumu模拟器-- ia32, x64, arm or arm64
         var TAG = "fridajs== ";
         ///////////////////////java 层hook///////////////////////
         var HookGoal = Java.use("cn.kxgz.fridademo.HookGoal");
@@ -171,14 +172,14 @@ setImmediate(function () {
         send(TAG + "通过模块名直接查找基址:" + soAddr);
 
         //下面为x86模拟器中地址偏移  arm真机下thumb指令下地址+1
-        var fadd = 0x101C;//在ida用肉眼观测得到add方法在文件中的偏移地址
-        var fsay = 0x1290;//打开字符窗口，
-        var fedit = 0x120C;//
-        var fmystr = 0x12C8;
-        var fmyarray = 0x13BC;
+        var fadd = isMUMU ? 0x0F50 : (0x101C + 1);//在ida用肉眼观测得到add方法在文件中的偏移地址
+        var fsay = isMUMU ? 0x1410 : (0x1290 + 1);//打开字符窗口，
+        var fedit = isMUMU ? 0x10F0 : (0x120C + 1);//
+        var fmystr = isMUMU ? 0x1480 : (0x12C8 + 1);
+        var fmyarray = isMUMU ? 0x1660 : (0x13BC + 1);
 
         //so文件地址+方法偏移地址+1
-        var faddptr = new NativePointer(soAddr).add(fadd + 1);
+        var faddptr = new NativePointer(soAddr).add(fadd);
         send(TAG + "函数add() faddptr:" + faddptr);
 
         //逮到方法真实地址就可以直接调用，调用add（5，6）
@@ -206,7 +207,7 @@ setImmediate(function () {
         });
 
         //hook say方法,修改返回值
-        var fsayptr = new NativePointer(soAddr).add(fsay + 1);
+        var fsayptr = new NativePointer(soAddr).add(fsay);
         Interceptor.attach(fsayptr, {
             onEnter: function (args) {
                 send(TAG + "onEnter say()");
@@ -225,7 +226,7 @@ setImmediate(function () {
         });
 
         //hook edit方法，修改参数
-        var feditptr = new NativePointer(soAddr).add(fedit + 1);
+        var feditptr = new NativePointer(soAddr).add(fedit);
         Interceptor.attach(feditptr, {
             onEnter: function (args) {
                 send(TAG + "onEnter edit()");
@@ -241,7 +242,7 @@ setImmediate(function () {
         });
 
         //hook mystr方法,修改返回值
-        var fmystrptr = new NativePointer(soAddr).add(fmystr + 1);
+        var fmystrptr = new NativePointer(soAddr).add(fmystr);
         Interceptor.attach(fmystrptr, {
             onEnter: function (args) {
                 send(TAG + "onEnter mystr()");
@@ -259,7 +260,7 @@ setImmediate(function () {
         });
 
         //hook myarray,修改返回数组
-        var myarrayptr = new NativePointer(soAddr).add(fmyarray + 1);
+        var myarrayptr = new NativePointer(soAddr).add(fmyarray);
         var argptr;
         Interceptor.attach(myarrayptr, {
             onEnter: function (args) {

@@ -1,4 +1,4 @@
-import frida, sys
+import frida, sys, platform
 
 def on_message(message, data):
     if message['type'] == 'send':
@@ -7,6 +7,8 @@ def on_message(message, data):
         print(message)
 
 def run(pkg):
+
+    # print(platform.machine())//CPU架构
     jscode = open('Fridademo.js','r',encoding= 'utf8').read()
     process = frida.get_usb_device().attach(pkg)
     script = process.create_script(jscode)
